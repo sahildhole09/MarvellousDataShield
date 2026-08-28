@@ -11,6 +11,36 @@ import shutil
 
 from DuplicateDetection import CompareDirectories,DisplayComparison
 
+from ReportAndLog import GenerateReport
+
+############################################################
+#
+# Function Name : CreateArchive
+# Description   : Create ZIP archive of backup
+#
+############################################################
+
+def CreateArchive(BackupDirectory):
+
+    try:
+        ZipFilePath = ("Archive/DataShield_"+ time.strftime("%Y%m%d_%H%M%S"))
+
+        Ret = os.path.exists("Archive")
+        if(Ret == False):
+            os.mkdir("Archive")
+
+        shutil.make_archive(ZipFilePath,"zip",BackupDirectory)
+        print("------------------------------------------------")
+        print("\nArchive created successfully")
+        print("------------------------------------------------")
+        return ZipFilePath + ".zip"
+
+    except Exception as e:
+        print("------------------------------------------------")
+        print("Unable to create archive :", e)
+        print("------------------------------------------------")
+        return None
+
 ############################################################
 #
 # Function Name : BackupFiles
@@ -52,6 +82,7 @@ def BackupFiles(SourceDirectory,BackupDirectory,NewFiles,ModifiedFiles):
             print("Unable to backup file :",e)
 
     return BackedUpFiles
+
 
 ############################################################
 #
@@ -108,6 +139,45 @@ def DataShield(SourceDirectory,BackupDirectory):
     ########################################################
  
     BackedUpFiles = BackupFiles(SourceDirectory,BackupDirectory,NewFiles,ModifiedFiles)
+
+    ########################################################
+    #
+    # Function Calling : To Create archive
+    #
+    ########################################################
+
+    ZipFilePath = CreateArchive(BackupDirectory)
+
+    if(ZipFilePath == None):
+        print("Unable to create ZIP Archive")
+        return
+    
+    end_time = time.ctime()
+    print(end_time)
+
+    ########################################################
+    #
+    # Final Report
+    #
+    ########################################################
+
+    Report = GenerateReport(NewFiles,ModifiedFiles,UnchangedFiles)
+
+    Report = Report + "\n\nBacked Up Files Are : "
+
+    Report = Report + str(BackedUpFiles)
+
+    Report = Report + "\nArchive File : "
+
+    Report = Report + str(ZipFilePath)
+
+    print("\n")
+
+    print(Report)
+
+    print("*" * 60)
+    print("Backup Completed Successfully")
+    print("*" * 60)
 
 ############################################################
 #

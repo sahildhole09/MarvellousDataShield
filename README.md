@@ -1,1 +1,146 @@
-"# MarvellousDataShield" 
+# Marvellous Data Shield - Automated Backup & File Monitoring System
+
+## Project Description
+
+Marvellous Data Shield is an "Automated Backup & File Monitoring System" developed in Python. It compares a source directory with a backup directory, detects new and modified files using file hashes, backs up only the changed files, creates a ZIP archive.
+
+## Features
+
+- Detects new files in the source directory.
+- Detects modified files by comparing file hashes.
+- Identifies unchanged files.
+- Copies only new and modified files to the backup directory.
+- Preserves the directory structure while backing up files.
+- Creates a timestamped ZIP archive of the backup.
+
+## Project Structure
+
+```text
+MarvellousDataShield/
+│
+├── MarvellousDataShield.py
+├── DuplicateDetection.py
+├── ReportAndLog.py
+├── Data/
+│   └── BackupScanner.py
+├── Archive/
+└── README.md
+```
+
+> `Data/BackupScanner.py` is required because `DuplicateDetection.py` imports `GetRelativeFileData` from it.
+
+## Technologies Used
+
+- Python 3
+- OS and file-system operations
+- SHA/hash-based file comparison through the project's `BackupScanner` module
+- `shutil` for file copying and ZIP archive creation
+
+## Requirements
+
+Install Python 3.x and the Python package used for scheduling:
+
+```bash
+pip install schedule
+```
+
+The remaining modules used by the project (`os`, `sys`,`hashlib`, `time`, `shutil`) are part of Python's standard library.
+
+## Installation
+
+1. Clone or download the project.
+2. Open a terminal in the project directory.
+3. Install the dependency:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Make sure the project contains the required `Data/BackupScanner.py` module.
+5. Configure the email details in `MarvellousDataShield.py` before running the project.
+
+## How to Run
+
+The command-line syntax is:
+
+```bash
+python MarvellousDataShield.py <SourceDirectory> <BackupDirectory>
+```
+
+Example:
+
+```bash
+python MarvellousDataShield.py Data Backup 
+```
+
+This means:
+
+- `Data` → source directory
+- `Backup` → backup directory
+
+The program performs one backup immediately and then continuously checks for next backups.
+
+## Working
+
+The backup process works in the following order:
+
+1. Checks whether the source directory exists.
+2. Creates the backup directory if it does not exist.
+3. Compares source and backup directories.
+4. Detects new, modified and unchanged files.
+5. Copies new and modified files to the backup directory.
+6. Creates a timestamped ZIP archive.
+7. Generates a backup report.
+
+### Archive
+
+ZIP archives are stored in:
+
+```text
+Archive/DataShield_YYYYMMDD_HHMMSS.zip
+```
+
+## Example Output
+
+```text
+************************************************************
+MARVELLOUS DATA SHIELD
+Automated Backup & File Monitoring System
+************************************************************
+
+NEW FILES : 2
+  + file1.txt
+  + project/file2.py
+
+MODIFIED FILES : 1
+  * report.txt
+
+UNCHANGED FILES : 5
+
+Backed up : file1.txt
+Backed up : project/file2.py
+Backed up : report.txt
+
+Archive created successfully
+
+Backup Completed Successfully
+```
+
+## Important Notes
+
+- The source directory must exist before starting the program.
+- The backup directory can be created automatically by the program.
+- Only new and modified files are copied during a backup.
+- Keep `MarvellousDataShield.py`, `DuplicateDetection.py`, `ReportAndLog.py`, and the `Data` module in the correct project structure.
+
+## Author
+
+Name : Sahil Ashok Dhole
+
+Course : Python Automation & Machine Learning
+
+Project : Marvellous Data Shield - Automated Backup & File Monitoring System
+
+**Marvellous Data Shield**
+
+An automated backup and file monitoring project implemented in Python.
