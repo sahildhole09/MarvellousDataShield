@@ -2,7 +2,7 @@
 
 ## Project Description
 
-Marvellous Data Shield is an "Automated Backup & File Monitoring System" developed in Python. It compares a source directory with a backup directory, detects new and modified files using file hashes, backs up only the changed files, creates a ZIP archive.
+Marvellous Data Shield is an "Automated Backup & File Monitoring System" developed in Python. It compares a source directory with a backup directory, detects new and modified files using file hashes, backs up only the changed files, creates a ZIP archive, generates logs.
 
 ## Features
 
@@ -12,6 +12,9 @@ Marvellous Data Shield is an "Automated Backup & File Monitoring System" develop
 - Copies only new and modified files to the backup directory.
 - Preserves the directory structure while backing up files.
 - Creates a timestamped ZIP archive of the backup.
+- Creates daily log files inside the `Log` directory.
+- Generates a backup report.
+- Supports automatic/scheduled backups at a specified interval.
 
 ## Project Structure
 
@@ -23,6 +26,7 @@ MarvellousDataShield/
 ├── ReportAndLog.py
 ├── Data/
 │   └── BackupScanner.py
+├── Log/
 ├── Archive/
 └── README.md
 ```
@@ -35,6 +39,7 @@ MarvellousDataShield/
 - OS and file-system operations
 - SHA/hash-based file comparison through the project's `BackupScanner` module
 - `shutil` for file copying and ZIP archive creation
+- `schedule` for automatic periodic backups
 
 ## Requirements
 
@@ -64,19 +69,20 @@ pip install -r requirements.txt
 The command-line syntax is:
 
 ```bash
-python MarvellousDataShield.py <SourceDirectory> <BackupDirectory>
+python MarvellousDataShield.py <SourceDirectory> <BackupDirectory> <Interval>
 ```
 
 Example:
 
 ```bash
-python MarvellousDataShield.py Data Backup 
+python MarvellousDataShield.py Data Backup 5
 ```
 
 This means:
 
 - `Data` → source directory
 - `Backup` → backup directory
+- `5` → run the backup every 5 minutes
 
 The program performs one backup immediately and then continuously checks for next backups.
 
@@ -90,7 +96,9 @@ The backup process works in the following order:
 4. Detects new, modified and unchanged files.
 5. Copies new and modified files to the backup directory.
 6. Creates a timestamped ZIP archive.
-7. Generates a backup report.
+7. Creates a log entry.
+8. Generates a backup report.
+9. Waits for the configured interval and repeats the process.
 
 ### Archive
 
@@ -131,7 +139,16 @@ Backup Completed Successfully
 - The source directory must exist before starting the program.
 - The backup directory can be created automatically by the program.
 - Only new and modified files are copied during a backup.
+- The scheduled backup process keeps running until the program is stopped.
 - Keep `MarvellousDataShield.py`, `DuplicateDetection.py`, `ReportAndLog.py`, and the `Data` module in the correct project structure.
+
+## Stopping the Program
+
+Because scheduled monitoring runs continuously, stop it from the terminal using:
+
+```text
+Ctrl + C
+```
 
 ## Author
 

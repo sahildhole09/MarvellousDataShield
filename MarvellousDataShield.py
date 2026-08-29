@@ -8,10 +8,11 @@ import os
 import sys
 import time
 import shutil
+import schedule
 
 from DuplicateDetection import CompareDirectories,DisplayComparison
 
-from ReportAndLog import GenerateReport
+from ReportAndLog import GenerateReport,CreateLog
 
 ############################################################
 #
@@ -82,7 +83,6 @@ def BackupFiles(SourceDirectory,BackupDirectory,NewFiles,ModifiedFiles):
             print("Unable to backup file :",e)
 
     return BackedUpFiles
-
 
 ############################################################
 #
@@ -157,6 +157,30 @@ def DataShield(SourceDirectory,BackupDirectory):
 
     ########################################################
     #
+    # To Generate log
+    #
+    ########################################################
+
+
+    LogFilePath = CreateLog(
+        NewFiles,
+        ModifiedFiles,
+        BackedUpFiles,
+        start_time,
+        end_time,
+        ZipFilePath
+        )
+    
+    print("*" * 60)
+    print("Backup Completed Successfully")
+    print("Start Time :", start_time)
+    print("End Time   :", end_time)
+    print("Log File   :", LogFilePath)
+    print("ZIP File   :", ZipFilePath)
+    print("*" * 60)
+
+    ########################################################
+    #
     # Final Report
     #
     ########################################################
@@ -181,6 +205,23 @@ def DataShield(SourceDirectory,BackupDirectory):
 
 ############################################################
 #
+# Function Name : ScheduledBackup
+# Description   : Run backup continuously
+#
+############################################################
+
+def ScheduledBackup(SourceDirectory,BackupDirectory,Interval):
+
+    schedule.every(Interval).minutes.do(DataShield,SourceDirectory,BackupDirectory)
+
+    print("\nBackup scheduled every",Interval,"minutes")
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+############################################################
+#
 # Function Name : main
 #
 ############################################################
@@ -192,15 +233,16 @@ def main():
     print("Automated Backup & File Monitoring System")
     print("*" * 60)
 
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("\nUsage :")
-        print("python MarvellousDataShield.py <SourceDirectory> <BackupDirectory>")
+        print("python MarvellousDataShield.py <SourceDirectory> <BackupDirectory> <Interval>")
         print("\nExample :")
-        print("python MarvellousDataShield.py Data Backup")
+        print("python MarvellousDataShield.py Data Backup 5")
         return
 
     SourceDirectory = sys.argv[1]
     BackupDirectory = sys.argv[2]
+    Interval = int(sys.argv[3])
 
     ########################################################
     #
@@ -209,6 +251,14 @@ def main():
     ########################################################
 
     DataShield(SourceDirectory,BackupDirectory)
+
+    ########################################################
+    #
+    # Start scheduled monitoring
+    #
+    ########################################################
+
+    ScheduledBackup(SourceDirectory,BackupDirectory,Interval)
 
 ############################################################
 #
