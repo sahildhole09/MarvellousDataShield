@@ -2,7 +2,7 @@
 
 ## Project Description
 
-Marvellous Data Shield is an "Automated Backup & File Monitoring System" developed in Python. It compares a source directory with a backup directory, detects new and modified files using file hashes, backs up only the changed files, creates a ZIP archive, generates logs.
+Marvellous Data Shield is an "Automated Backup & File Monitoring System" developed in Python. It compares a source directory with a backup directory, detects new and modified files using file hashes, backs up only the changed files, creates a ZIP archive, generates logs and sends the backup report through email.
 
 ## Features
 
@@ -14,6 +14,7 @@ Marvellous Data Shield is an "Automated Backup & File Monitoring System" develop
 - Creates a timestamped ZIP archive of the backup.
 - Creates daily log files inside the `Log` directory.
 - Generates a backup report.
+- Sends the backup report through Gmail SMTP.
 - Supports automatic/scheduled backups at a specified interval.
 
 ## Project Structure
@@ -24,6 +25,7 @@ MarvellousDataShield/
 ├── MarvellousDataShield.py
 ├── DuplicateDetection.py
 ├── ReportAndLog.py
+├── Email.py
 ├── Data/
 │   └── BackupScanner.py
 ├── Log/
@@ -40,6 +42,7 @@ MarvellousDataShield/
 - SHA/hash-based file comparison through the project's `BackupScanner` module
 - `shutil` for file copying and ZIP archive creation
 - `schedule` for automatic periodic backups
+- `smtplib` and `email.mime.text` for email reporting
 
 ## Requirements
 
@@ -49,7 +52,7 @@ Install Python 3.x and the Python package used for scheduling:
 pip install schedule
 ```
 
-The remaining modules used by the project (`os`, `sys`,`hashlib`, `time`, `shutil`) are part of Python's standard library.
+The remaining modules used by the project (`os`, `sys`,`hashlib`, `time`, `shutil`,`smtplib`, and `email`) are part of Python's standard library.
 
 ## Installation
 
@@ -63,6 +66,26 @@ pip install -r requirements.txt
 
 4. Make sure the project contains the required `Data/BackupScanner.py` module.
 5. Configure the email details in `MarvellousDataShield.py` before running the project.
+
+## Email Configuration
+
+The main program currently contains placeholder values:
+
+```python
+SenderEmail = "your_email@gmail.com"
+SenderPassword = "app_password"
+ReceiverEmail = "receiver_email@gmail.com"
+```
+
+Replace them with your Gmail address, Gmail App Password, and receiver email address.
+
+For Gmail SMTP, the project uses:
+
+- SMTP server: `smtp.gmail.com`
+- Port: `587`
+- TLS encryption
+
+Use a Gmail App Password rather than your normal Gmail password.
 
 ## How to Run
 
@@ -84,7 +107,7 @@ This means:
 - `Backup` → backup directory
 - `5` → run the backup every 5 minutes
 
-The program performs one backup immediately and then continuously checks for next backups.
+The program performs one backup immediately and then continuously checks for scheduled backups.
 
 ## Working
 
@@ -98,7 +121,18 @@ The backup process works in the following order:
 6. Creates a timestamped ZIP archive.
 7. Creates a log entry.
 8. Generates a backup report.
-9. Waits for the configured interval and repeats the process.
+9. Sends the report through email.
+10. Waits for the configured interval and repeats the process.
+
+## Generated Files
+
+### Log
+
+Daily logs are stored in:
+
+```text
+Log/DataShield_YYYY-MM-DD.log
+```
 
 ### Archive
 
@@ -140,7 +174,7 @@ Backup Completed Successfully
 - The backup directory can be created automatically by the program.
 - Only new and modified files are copied during a backup.
 - The scheduled backup process keeps running until the program is stopped.
-- Keep `MarvellousDataShield.py`, `DuplicateDetection.py`, `ReportAndLog.py`, and the `Data` module in the correct project structure.
+- Keep `MarvellousDataShield.py`, `DuplicateDetection.py`, `ReportAndLog.py`,`Email.py` and the `Data` module in the correct project structure.
 
 ## Stopping the Program
 

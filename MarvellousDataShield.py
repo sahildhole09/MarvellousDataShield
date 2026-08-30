@@ -14,6 +14,8 @@ from DuplicateDetection import CompareDirectories,DisplayComparison
 
 from ReportAndLog import GenerateReport,CreateLog
 
+from Email import SendEmail
+
 ############################################################
 #
 # Function Name : CreateArchive
@@ -202,6 +204,23 @@ def DataShield(SourceDirectory,BackupDirectory):
     print("*" * 60)
     print("Backup Completed Successfully")
     print("*" * 60)
+
+    ########################################################
+    #
+    # Email Automation
+    #
+    ########################################################
+
+    SenderEmail = "your_email@gmail.com"
+    SenderPassword = "your_16_characters_password"
+    ReceiverEmail = "receiver_email@gmail.com"
+
+    EmailStatus = SendEmail(SenderEmail,SenderPassword,ReceiverEmail,"Marvellous Data Shield Backup Report",Report,ZipFilePath)
+
+    if(EmailStatus == True):
+        print("Backup Report sent successfully through email")
+    else:
+        print("Unable to send backup report through email")
 
 ############################################################
 #
