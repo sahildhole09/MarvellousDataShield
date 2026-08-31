@@ -265,19 +265,19 @@ def main():
 
     ########################################################
     #
-    # Run first backup immediately
-    #
-    ########################################################
-
-    DataShield(SourceDirectory,BackupDirectory)
-
-    ########################################################
-    #
     # Start scheduled monitoring
     #
     ########################################################
 
     ScheduledBackup(SourceDirectory,BackupDirectory,Interval)
+
+    ########################################################
+    #
+    # Run first backup immediately
+    #
+    ########################################################
+
+    DataShield(SourceDirectory,BackupDirectory)
 
 ############################################################
 #
